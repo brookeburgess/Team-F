@@ -76,10 +76,111 @@ results
 
 
 #Code for Josh's Analysis
+#dataframe and setups 
+```{r, include = FALSE}
+library(dplyr)
+library(ggplot2)
+confirmed <- read.csv("~/covid_confirmed_usafacts.csv")
+vote <- read.csv("~/voteinfo.csv")
+population <- read.csv("~/covid_county_population_usafacts.csv")
+deaths <- read.csv("~/covid_deaths_usafacts.csv")
+states <- read.csv("~/states.csv")
+```
+ ```{r, warning= FALSE}
+deaths <- deaths %>%
+  mutate(Death =  X7.18.2020)
 
+deaths <- deaths %>%
+  group_by(State) %>%
+  summarise(Death = sum(Death))
 
+confirmed <- confirmed %>%
+  mutate(Confirmed = X7.18.2020)
 
+confirmed <- confirmed %>%
+  group_by(State) %>%
+  summarise(Confirmed = sum(Confirmed))
 
+data <- left_join(deaths,confirmed, by = c("State"))
 
+vote$Name <- vote$States 
+vote <- left_join(vote, states, by = c("Name"))
+vote$Vote <- vote$N
+vote$Democratic.advantage <- vote$Democratic.advantage*0.01
+vote <- vote %>%
+  select(State, Vote, Classification, Democratic.advantage)
 
-  
+data <- left_join(data, vote, by = c("State"))
+
+population <- population %>%
+  group_by(State) %>%
+  summarise(Population = sum(population))
+
+data <- left_join(data, population, by = c("State"))
+data$ConfirmedRate <- data$Confirmed/data$Population
+data$DeathRate <- data$Death/data$Confirmed
+data$Vote <- as.numeric(data$Vote)
+data = data[!data$State == "DC",]
+colnames(data)
+```                                    
+#ggplot                   
+```{r}
+ggplot(data)+
+  geom_point(aes(x = Democratic.advantage, y = ConfirmedRate))
+ggplot(data)+
+  geom_boxplot(aes(x = Classification, y = ConfirmedRate))
+```
+#linear relationship                                      
+```{r}
+data <- data %>%
+  mutate(Inclination = ifelse(Democratic.advantage > 0, "Democratic",
+                             ifelse(Democratic.advantage == 0, "Competitive", "Republican")))
+ggplot(data)+
+  geom_boxplot(aes(x = Inclination, y = ConfirmedRate))
+```                                      
+```{r}
+model1 <- lm(ConfirmedRate ~ Democratic.advantage, data = data)
+summary(model1)
+```
+@Natural logs                                      
+```{r}
+data <- data %>%
+  mutate(logCR = log(ConfirmedRate),
+         logC = log(Confirmed))
+
+ggplot(aes(x = Democratic.advantage, y = logCR), data = data)+
+  geom_point()+
+  geom_smooth(method = "lm", se = FALSE)+
+  theme_classic()+
+  labs(x = "Democratic Advantage (%)",
+       y = "Logged confirmed rate")
+
+ggplot(aes(x = Democratic.advantage, y = logC), data = data)+
+  geom_point()+
+  geom_smooth(method = "lm", se = FALSE, color = "red")+
+  theme_classic()+
+  labs(x = "Democratic Advantage (%)",
+       y = "Logged number of confirmed case")
+```
+#Poisson                                      
+```{r}
+model2 <- glm(Confirmed ~ Population + 
+                Democratic.advantage, 
+              family = "poisson", data = data)
+summary(model2)
+```
+```{r}
+model3 <- glm(Confirmed ~ Population + Democratic.advantage + 
+                Classification, family = "poisson", data = data)
+summary(model3)
+```
+#Anova                                      
+```{r}
+anova(model2, model3)
+```  
+```{r}
+model4 <- glm(Confirmed ~ Population + Democratic.advantage + 
+                Classification + Democratic.advantage:Classification, 
+              family = "poisson", data = data)
+anova(model3,model4)
+```
