@@ -3,15 +3,15 @@ title: "Summary Paper"
 author: "Team F"
 date: "8/9/2020"
 output:
-html_document:
+  html_document:
     code_folding: hide
-    # number_sections: true
     toc: yes
     toc_depth: 3
     toc_float: yes
   pdf_document:
     toc: yes
     toc_depth: '3'
+  '': default
 ---
 
 ```{r basicfunct, include=FALSE}
