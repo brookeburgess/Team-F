@@ -123,7 +123,7 @@ data_by_state <- read.csv("data_by_state.csv")
 covid=read.csv("state_data_add.csv")
 ```
 
-#1. Introduction
+# 1. Introduction
 *The coronavirus death toll has surpassed 159,000 and almost 5 million positive cases have been confirmed in the United States since its outbreak, causing the United states to have the most COVID-19 cases and deaths in the world.*
 *President Trump and senior administration officials have been criticized for their response to the outbreak, largely due to slow implementation of testing, spread of health related mis-information and premature re-opening of states.* 
 *However, Republicans and Democrats may view the situation differently. Recently, we have begun to see red states in the south opening early and having an exponential increase of cases, while many blue states in the northeast have maintained more cautious protocols. Furthermore, Republicans are reportedly more comfortable visiting salons, restaurants, indoor events and have shown a decreased concern of catching the virus since its outbreak. Democrats are almost twice as likely to say masks should be worn at all times and say actions of ordinary Americans affect the spread of corona.2 We begin to question how a population's political affiliation affects its pandemic response.*
@@ -147,8 +147,8 @@ This report is organized as follows:
 4. Conclusion
 5. Citations
 
-#2. Description of the Data 
-##2.1 Source Data
+# 2. Description of the Data 
+## 2.1 Source Data
 
 *USA Facts collects COVID-19 data in aggregate from the Centers for Disease Control (CDC), state- and local-level public health agencies.1 From this source, we are using a dataset that reports COVID-related deaths and a dataset that reports confirmed COVID- cases , accounted daily, by county, since January 22, 2020 to July 18, 2020. Both of these datasets have 3,195 observations across 183 variables. We selected the data from May 1st to July 18 to perform the analysis. Because we intend to focus on the time period when coronavirus has outbreak in all states and many state governors have announced policies to respond to the Covid-19. Covid-19 deaths passed 100,000 on May 27, and large protests happened on May 31 and  June are also the reason that we chose May 1st to July 18 as the time period of our analysis.* 
 *We also collected Covid-19 tests, recoveries, and hospitalization data of each state in  the website covidtracking. We want to compare the tests and hospitalization rate in each state.* 
@@ -158,7 +158,7 @@ This report is organized as follows:
 str(covid)
 str(data_by_state)
 ```
-##2.2 Variables
+## 2.2 Variables
 
 ```{r,results='markup'}
 xkablesummary(covid)
@@ -180,7 +180,7 @@ xkablesummary(covid)
 **Population.per.thou**- Total number of people per thousand of the states population
 
 
-##2.3 Geographical Description of the Data 
+## 2.3 Geographical Description of the Data 
 
 *The graph below shows an overall trend of confirmed covid-19 cases and deaths from 05/01/2020 to 07/18/2020 in the US. The top of each vertical line represents the highest number of cases or deaths in a state at the time period. We can see the daily confirmed cases and deaths are increasing continuously. And from another graph we can see tests and recoveries are increasing obviously.*
 ```{r,echo=FALSE,message = FALSE}
@@ -263,9 +263,9 @@ ggplot(covid_cum,aes(x=state,y=hospitalized,color=state))+geom_point()+ggtitle("
 ```
 
 
-#3. Analysis
+# 3. Analysis
 
-##3.1 Plot Analysis
+## 3.1 Plot Analysis
 
 *In order to better compare the two republican states and democratic states, the line plots below are generated. We can see the lines of confirmed cases in Republican states Florida and Texas are going up more sharply than democratic states New York and California. They may have more chances to increase cases greatly in the future. And although the two republican states have the number of tests much lower than the two democratic states, they don’t show a sign that they will have many more people get tested in the future.* 
 
@@ -368,7 +368,7 @@ ggplot(df8, aes(x = date, y = value)) +
 ```
 
 
-##3.2 Two Sample T-Test
+## 3.2 Two Sample T-Test
 
 *In this section, the focus will be on the relationship between political party affiliation and the average change in Covid-19 cases, from May 1, 2020 to July 18, 2020.  The average change in cases is per 1,000 people to better visualize how the number of cases has changed over time and to make the states more comparable. Figures 1 and 2 below will be used to visually evaluate the data for potential relationships or patterns between the average change in cases and political party affiliation.*
 
@@ -436,7 +436,7 @@ results
 *After conducting the t-test, the results show that the p-value = 0.9408, which is greater than 0.05. This implies the failure to reject the null hypothesis that the means are equal. Therefore, we can conclude that between May 1, 2020 and July 18, 2020, the average change in Covid-19 cases was not significantly higher for republican states, compared to democratic states.*
 
 
-##3.3 Linear Regression 
+## 3.3 Linear Regression 
 ```{r, include=FALSE}
 #Remove outliers from cases and deaths per thousand 
 data_by_state_clean<- outlierKD2(data_by_state, Cases.per.thou, TRUE)
@@ -485,7 +485,7 @@ confint(dem_lm)
 ```
 *To test if this difference was significant, we ran a confidence interval for each set of data (Figure 12-13). As the intervals lie just outside of each other, we can conclude with 95% confidence that the deaths and cases for each party are different.* 
 
-##3.4 Additional Analysis including ANOVA, log and Poisson 
+## 3.4 Additional Analysis including ANOVA, log and Poisson 
 ```{r, include = FALSE}
 library(dplyr)
 library(ggplot2)
@@ -615,14 +615,14 @@ anova(model3,model4)
 
 *Further, we add a correlated variable (Model4) to capture the relationship between the classification of Democratic inclination and the Democratic advantage in vote of each state. According to the ANOVA test, Model4 is the best model among all models we've built so far.*
 
-#4. Conclusion
+# 4. Conclusion
     *From our analysis, it is clear that democratic states have a higher number of cases than republican states. However, by comparing some graphs of democratic states and republican states, some democratic states are showing more constant increase of confirmed cases, having more tests, and having more people hospitalized from May 1st to July 18. This is an indication that democratic states are working towards exposing and stabilizing the number of cases.*
 *When we account for differences in population, our analysis shows that republican states have a higher average increase in covid-19 cases. However, the t-test results indicate that there is not enough evidence to reject the null hypothesis. Therefore, the average change in covid-19 cases between republican and democratic states are not significantly different.* 
 *In terms of the relationship between COVID deaths and cases, the analysis of linear dependence between democratic and republican states showed that a linear relationship is present. Democratic states have a steeper rate of deaths and cases compared to republican states.* 
 
 	*Overall, the results from our analysis were able to answer our question on whether republican states have fared worse  during the coronavirus pandemic. While democratic states' responses may be more effective at controlling the number of cases, they have experienced poorer outcomes. This data may need to be re-analyzed in the upcoming months to factor in updated numbers of cases and deaths to more accurately capture the effect of early opening states. We must also consider a wide variety of other factors at play that may affect this analysis, such as the status of general public health in a population, ethnicity,education level, or the influence of travelers.* 
 
-#5. Citations 
+# 5. Citations 
 1.US Coronavirus Cases and Deaths. (2020, August 8). Retrieved from https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/
 2.Republicans, Democrats Move Even Further Apart in Coronavirus Concerns. (2020, June 25). Retrieved from https://www.pewresearch.org/politics/2020/06/25/republicans-democrats-move-even-further-apart-in-coronavirus-concerns/
 3.Democratic States Exceed Republican States by Four in 2018. (2019, February 22). Retrieved from https://news.gallup.com/poll/247025/democratic-states-exceed-republican-states-four-2018.aspx
