@@ -448,7 +448,7 @@ data_by_state_clean<- outlierKD2(data_by_state, Deaths.per.thou, TRUE)
 rep_data1 <- subset(data_by_state_clean, Party == "Republican")
 dem_data1 <- subset(data_by_state_clean, Party == "Democratic")
 ```
-```{r}
+```{r,warning=FALSE,message=FALSE}
 #linear model cases v deaths
 
 library(ggplot2)
