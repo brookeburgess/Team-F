@@ -490,11 +490,11 @@ confint(dem_lm)
 ```{r, include = FALSE}
 library(dplyr)
 library(ggplot2)
-confirmed <- read.csv("~/covid_confirmed_usafacts.csv")
-vote <- read.csv("~/voteinfo.csv")
-population <- read.csv("~/covid_county_population_usafacts.csv")
-deaths <- read.csv("~/covid_deaths_usafacts.csv")
-states <- read.csv("~/states.csv")
+confirmed <- read.csv("covid_confirmed_usafacts.csv")
+vote <- read.csv("voteinfo.csv")
+population <- read.csv("covid_county_population_usafacts.csv")
+deaths <- read.csv("covid_deaths_usafacts.csv")
+states <- read.csv("states.csv")
 ```
 
 ```{r, warning= FALSE}
