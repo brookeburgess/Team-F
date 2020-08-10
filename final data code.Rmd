@@ -131,7 +131,7 @@ covid=read.csv("state_data_add.csv")
 **Smart Question:**
 *Do Republican states have an increased rate of COVID infection?*
 
-##1.1 Index
+## 1.1 Index
 This report is organized as follows: 
 1. Introduction
 1.1 Index
